@@ -34,8 +34,7 @@ const getInfo = gql`
     }
   }
 `;
-// 391769feff7027dfbfc4f07e0f0efd2e979e6cfe
-// 5f212556ca750afccaae7118d064a6c36d01c626
+
 const getRepo = gql`
   query {
     viewer {

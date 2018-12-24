@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import "./App.css";
 import { Heading, Pane } from "evergreen-ui";
-import { Polar, Doughnut } from "react-chartjs-2";
+import { Polar, Doughnut, Pie } from "react-chartjs-2";
 
 class InfoUser extends Component {
   constructor(props) {
@@ -81,15 +81,46 @@ class InfoUser extends Component {
           alignItems="center"
           justifyContent="center"
           size={15}
+          backgroundColor="lightsteelblue"
         >
           <Heading
             size={800}
             color="white"
+            marginBottom={"3"}
             style={{ textAlign: "center", color: "black" }}
           >
-            language distribution
+            Graph
           </Heading>
-          <Doughnut data={this.state.dataGraphOne} />
+          <Pane
+            float="left"
+            padding={24}
+            marginRight={"1%"}
+            width="49%"
+            alignItems="center"
+            justifyContent="center"
+            size={15}
+            backgroundColor="#282c34"
+          >
+            <Heading size={400} style={{ textAlign: "center", color: "white" }}>
+              Différents langages pour tout les projets
+            </Heading>
+            <Doughnut data={this.state.dataGraphOne} />
+          </Pane>
+          <Pane
+            float="left"
+            marginLeft={"1%"}
+            padding={24}
+            width="49%"
+            alignItems="center"
+            justifyContent="center"
+            size={15}
+            backgroundColor="#282c34"
+          >
+            <Heading size={400} style={{ textAlign: "center", color: "white" }}>
+              Différents langages pour tout les projets
+            </Heading>
+            <Pie data={this.state.dataGraphOne} />
+          </Pane>
         </Pane>
       </>
     );
