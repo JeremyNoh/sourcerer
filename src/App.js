@@ -1,26 +1,92 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { ApolloProvider, Query } from "react-apollo";
 
-class App extends Component {
+import "./App.css";
+
+import myclient from "./client";
+import Repositories from "./Repositories";
+import InfoUser from "./InfoUser";
+
+const createInfoUser = data => {
+  let user = {};
+  const {
+    avatarUrl,
+    bio,
+    email,
+    url,
+    login,
+    followers,
+    following
+  } = data.viewer;
+
+  user.repositoryCount = data.search.repositoryCount;
+  user.avatarUrl = avatarUrl;
+  user.bio = bio;
+  user.email = email;
+  user.url = url;
+  user.nickname = login;
+  user.following = following.totalCount;
+  user.followers = followers.totalCount;
+
+  return user;
+};
+//
+// const RecupInfoUser = props => (
+//   <Query query={myclient.getInfo}>
+//     {({ loading, error, data }) => {
+//       if (loading) {
+//         return <span>WAIT</span>;
+//       }
+//       const user = createInfoUser(data);
+//       props.getUser(user);
+//       return <></>;
+//     }}
+//   </Query>
+// );
+class RecupInfoUser extends Component {
+  majUser = data => {
+    const user = createInfoUser(data);
+    this.props.getUser(user);
+  };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Query query={myclient.getInfo}>
+        {({ loading, error, data }) => {
+          if (loading) {
+            return <span>WAIT</span>;
+          }
+          this.majUser(data);
+          return <></>;
+        }}
+      </Query>
+    );
+  }
+}
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { user: undefined };
+  }
+
+  getUser = user => {
+    if (!this.state.user) {
+      this.setState({ user, isloading: true });
+    }
+  };
+
+  render() {
+    return (
+      <ApolloProvider client={myclient.client}>
+        <div className="AppContent">
+          <RecupInfoUser getUser={this.getUser} />
+          {this.state.isloading && <InfoUser user={this.state.user} />}
+          {this.state.isloading && (
+            <Repositories repositoryCount={this.state.user.repositoryCount} />
+          )}
+        </div>
+      </ApolloProvider>
     );
   }
 }

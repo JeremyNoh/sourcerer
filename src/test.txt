@@ -1,0 +1,56 @@
+
+lien utile : https://github.com/jerairrest/react-chartjs-2
+
+query {
+  viewer {
+    login
+    email
+		avatarUrl
+    bio
+		url
+		followers{
+			totalCount
+    }
+    following{
+      totalCount
+    }
+
+   }
+    search(query: "user:jeremynoh ", type: REPOSITORY) {
+    repositoryCount
+  }
+}
+
+query {
+   viewer {
+     repositories(first: 100) {
+      nodes{
+        defaultBranchRef {
+            target {
+              ... on Commit {
+                history {
+                  totalCount
+                }
+              }
+            }
+          }
+           name
+           projectsUrl
+          	languages(first : 5){
+            totalCount
+            nodes{
+              color
+              name
+            }
+          }
+          collaborators(first : 30){
+            totalCount
+            nodes{
+              login
+            }
+          }
+
+         }
+       }
+     }
+ }
