@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { ApolloProvider, Query } from "react-apollo";
+import gql from "graphql-tag";
 
 import "./App.css";
 
@@ -30,19 +31,7 @@ const createInfoUser = data => {
 
   return user;
 };
-//
-// const RecupInfoUser = props => (
-//   <Query query={myclient.getInfo}>
-//     {({ loading, error, data }) => {
-//       if (loading) {
-//         return <span>WAIT</span>;
-//       }
-//       const user = createInfoUser(data);
-//       props.getUser(user);
-//       return <></>;
-//     }}
-//   </Query>
-// );
+
 class RecupInfoUser extends Component {
   majUser = data => {
     const user = createInfoUser(data);

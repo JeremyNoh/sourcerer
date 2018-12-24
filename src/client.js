@@ -29,7 +29,7 @@ const getInfo = gql`
         totalCount
       }
     }
-    search(query: "user:jeremynoh ", type: REPOSITORY) {
+    search(query: "user:majdi ", type: REPOSITORY) {
       repositoryCount
     }
   }

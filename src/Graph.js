@@ -2,13 +2,14 @@ import React, { Component } from "react";
 
 import "./App.css";
 import { Heading, Pane } from "evergreen-ui";
-import { Polar, Doughnut, Pie } from "react-chartjs-2";
+import { Doughnut, Polar } from "react-chartjs-2";
 
 class InfoUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataGraphOne: {}
+      dataGraphOne: {},
+      dataGraphTwo: {}
     };
   }
   componentDidMount() {
@@ -48,13 +49,14 @@ class InfoUser extends Component {
     for (var dispacthColor in objColor) {
       colorsGraphOne.push(dispacthColor);
     }
+    console.log(colorsGraphOne);
 
     let dataGraph = {
       datasets: [
         {
           data: dataGraphOne,
           backgroundColor: colorsGraphOne,
-          label: "My dataset"
+          label: "Number of projects by language"
         }
       ],
       labels: labelsGraphOne
@@ -63,10 +65,54 @@ class InfoUser extends Component {
     return dataGraph;
   };
 
+  giveMeTwoGraph = data => {
+    let dataCommit = [];
+    data.forEach(language => {
+      let obj = {};
+      obj.name = language.name;
+      obj.nbCommit = language.defaultBranchRef.target.history.totalCount;
+      dataCommit.push(obj);
+    });
+
+    let newArray = dataCommit.sort(function(a, b) {
+      return b.nbCommit - a.nbCommit;
+    });
+
+    newArray = newArray.slice(0, 5);
+
+    let dataGraphTwo = [];
+    let labelsGraphTwo = [];
+
+    for (var dispacth of newArray) {
+      labelsGraphTwo.push(dispacth["name"]);
+      dataGraphTwo.push(dispacth["nbCommit"]);
+    }
+
+    let dataGraph = {
+      datasets: [
+        {
+          data: dataGraphTwo,
+          backgroundColor: [
+            "#e34c26",
+            "#438eff",
+            "#C1F12E",
+            "#563d7c",
+            "#2b7489",
+            "#ffac45"
+          ],
+          label: "Top 5 most commit projects"
+        }
+      ],
+      labels: labelsGraphTwo
+    };
+
+    return dataGraph;
+  };
+
   formatData = data => {
     let dataGraphOne = this.giveMeOneGraph(data);
-
-    this.setState({ dataGraphOne });
+    let dataGraphTwo = this.giveMeTwoGraph(data);
+    this.setState({ dataGraphOne, dataGraphTwo });
   };
 
   render() {
@@ -102,7 +148,7 @@ class InfoUser extends Component {
             backgroundColor="#282c34"
           >
             <Heading size={400} style={{ textAlign: "center", color: "white" }}>
-              Différents langages pour tout les projets
+              Number of projects by language
             </Heading>
             <Doughnut data={this.state.dataGraphOne} />
           </Pane>
@@ -117,9 +163,9 @@ class InfoUser extends Component {
             backgroundColor="#282c34"
           >
             <Heading size={400} style={{ textAlign: "center", color: "white" }}>
-              Différents langages pour tout les projets
+              Projets avec le + de commit
             </Heading>
-            <Pie data={this.state.dataGraphOne} />
+            <Polar data={this.state.dataGraphTwo} />
           </Pane>
         </Pane>
       </>
